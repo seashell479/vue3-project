@@ -1,58 +1,57 @@
 <template>
   <div class="container">
     <h1 class="text-center">🐯To-Do List🐯</h1>
-    <form class="d-flex" @submit.prevent="onSubmit">
-      <div class="flex-grow-1 me-2">
-        <input class="form-control" type="text" v-model="todo" placeholder="새로운 내용 입력" />
-      </div>
-      <button class="btn btn-primary" type="submit">추가</button>
-    </form>
-    <div v-if="hasError" class="text-danger">
-      내용은 무조건 입력하셔야 합니다!!
+    <input class="form-control" type="text" v-model="searchText" placeholder="검색">
+    <hr />
+    <SimpleForm @add-todo="addTodo" />
+    <div v-if="!filteredTodoList.length">
+      <!-- 전에 했던 거 v-if="!todoList.length"/v-if="todoList.length == 0" 가능함, v-show도 가능함 -->
+      추가된 내용이 없습니다.
     </div>
-    <div v-for="todo in todoList" :key="todo.id">
-      <div class="card mt-2">
-        <div class="card-body p-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" v-model="todo.completed">
-            <label class="form-check-label" :class="{ completed: todo.completed }">
-              {{ todo.content }}
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TodoList :todoList="filteredTodoList" @toggle-todo="toggleTodo" @todo-delete="onDelete" />
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import SimpleForm from './components/SimpleForm.vue';
+import TodoList from "./components/TodoList.vue";
 
 export default {
+  components: {
+    SimpleForm,
+    TodoList,
+  },
+
   setup() {
-    const todo = ref("");
     const todoList = ref([]); // 배열 요소
-    const hasError = ref(false);
-    const completedStyle = {
-      textDecoration: "line-through",
-      color: "gray",
+
+    function addTodo(todos) {
+      console.log(todos);
+      todoList.value.push(todos);
     }
 
-    function onSubmit() {
-      if (todo.value === "") {
-        hasError.value = true;
-      } else {
-        todoList.value.push({
-          id: Date.now(),
-          content: todo.value,
-          completed: false, //체크박스 연동
-        });
-        hasError.value = false;
-        todo.value = "";
+    function toggleTodo(index) {
+      console.log(todoList.value[index].completed);
+      todoList.value[index].completed = !todoList.value[index].completed;
+      console.log(todoList.value[index].completed);
+    }
+
+    function onDelete(index) {
+      todoList.value.splice(index, 1);
+    }
+
+    const searchText = ref("");
+    const filteredTodoList = computed(() => {
+      if (searchText.value) {
+        return todoList.value.filter((loop) => {
+          return loop.content.includes(searchText.value);
+        })
       }
-    }
+      return todoList.value;
+    })
 
-    return { todo, todoList, onSubmit, hasError, completedStyle }
+    return { todoList, addTodo, onDelete, toggleTodo, searchText, filteredTodoList };
   },
 };
 </script>
