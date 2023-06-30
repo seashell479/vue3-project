@@ -23,7 +23,10 @@
           </label>
         </div>
         <div>
-          <button class="btn btn-danger" @click.stop="onDelete(index)">
+          <button
+            class="btn btn-danger size-fixed"
+            @click.stop="onDelete(index)"
+          >
             삭제
           </button>
         </div>
@@ -70,4 +73,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+button.size-fixed {
+  margin-left: 10px;
+  width: 60px;
+}
+</style>
