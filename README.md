@@ -1,24 +1,6 @@
 # vue3-project
 
-## Project setup
+## Vue 학습
 ```
-npm install
+Vue에 대해 배우면서 뷰를 이용한 todo-app을 제작했다.
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
